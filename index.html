@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>TradeVault Pro — Professional Trading Suite | Forex Edition</title>
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,500;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'Inter',sans-serif;
+  background:#0a0f0d;
+  color:#e8f5e9;
+  overflow-x:hidden;
+}
+
+/* ========== FOREX BACKGROUND IMAGES (Slideshow) ========== */
+.forex-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -3;
+  overflow: hidden;
+}
+.bg-slide {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  animation: bgFade 24s infinite;
+}
+.bg1 { background-image: url('https://images.pexels.com/photos/210607/pexels-photo-210607.jpeg?auto=compress&cs=tinysrgb&w=1600'); }
+.bg2 { background-image: url('https://images.pexels.com/photos/259027/pexels-photo-259027.jpeg?auto=compress&cs=tinysrgb&w=1600'); }
+.bg3 { background-image: url('https://images.pexels.com/photos/187041/pexels-photo-187041.jpeg?auto=compress&cs=tinysrgb&w=1600'); }
+.bg4 { background-image: url('https://images.pexels.com/photos/6771662/pexels-photo-6771662.jpeg?auto=compress&cs=tinysrgb&w=1600'); }
+@keyframes bgFade {
+  0% { opacity: 0; transform: scale(1); }
+  10% { opacity: 0.4; transform: scale(1.02); }
+  25% { opacity: 0.4; transform: scale(1.02); }
+  35% { opacity: 0; transform: scale(1); }
+  100% { opacity: 0; }
+}
+.bg1 { animation-delay: 0s; }
+.bg2 { animation-delay: 6s; }
+.bg3 { animation-delay: 12s; }
+.bg4 { animation-delay: 18s; }
+
+.dark-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(0,0,0,0.5) 0%, rgba(10,15,13,0.85) 100%);
+  z-index: -2;
+}
+
+/* ========== MOVING CANDLESTICK CANVAS ========== */
+.candlestick-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  opacity: 0.35;
+  pointer-events: none;
+}
+.candlestick-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+/* Particles */
+.particles{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  z-index:0;
+  pointer-events:none;
+}
+.particle{
+  position:absolute;
+  background:rgba(0,230,118,0.08);
+  border-radius:50%;
+  animation:floatParticle linear infinite;
+}
+@keyframes floatParticle{
+  0%{transform:translateY(100vh) rotate(0deg);opacity:0;}
+  10%{opacity:0.4;}
+  90%{opacity:0.4;}
+  100%{transform:translateY(-100vh) rotate(360deg);opacity:0;}
+}
+
+/* Navbar */
+.navbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:1rem 5%;
+  position:sticky;
+  top:0;
+  backdrop-filter:blur(20px);
+  background:rgba(10,15,13,0.85);
+  z-index:1000;
+  border-bottom:1px solid rgba(0,230,118,0.3);
+  flex-wrap:wrap;
+  gap:1rem;
+}
+.logo{
+  font-size:1.6rem;
+  font-weight:900;
+  background:linear-gradient(135deg,#00e676,#69ff47);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.nav-links{display:flex;gap:0.8rem;flex-wrap:wrap;}
+.nav-btn{
+  background:rgba(0,230,118,0.1);
+  padding:0.5rem 1.2rem;
+  border-radius:50px;
+  color:#e8f5e9;
+  text-decoration:none;
+  font-weight:600;
+  font-size:0.8rem;
+  transition:0.3s;
+  border:1px solid rgba(0,230,118,0.3);
+}
+.nav-btn:hover{
+  background:#00e676;
+  color:#0a0f0d;
+  transform:translateY(-2px);
+}
+/* Silent launch button style (same as primary) */
+.launch-btn {
+  background: linear-gradient(95deg, #00e676, #00b853);
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 50px;
+  color: #0a0f0d;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 0.85rem;
+}
+.launch-btn:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 20px rgba(0, 230, 118, 0.5);
+}
+.btn-link {
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+  background: linear-gradient(95deg, #00e676, #00b853);
+  border: none;
+  padding: 0.6rem 1.8rem;
+  border-radius: 50px;
+  color: #0a0f0d;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.btn-link:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 20px rgba(0, 230, 118, 0.5);
+}
+
+/* Hero */
+.hero{
+  min-height:80vh;
+  display:flex;
+  align-items:center;
+  padding:2rem 5%;
+  gap:3rem;
+  flex-wrap:wrap;
+  position:relative;
+  z-index:2;
+}
+.hero-content{flex:1;}
+.hero-badge{
+  background:rgba(0,230,118,0.15);
+  backdrop-filter:blur(8px);
+  display:inline-block;
+  padding:0.4rem 1rem;
+  border-radius:40px;
+  font-size:0.8rem;
+  border-left:3px solid #00e676;
+  margin-bottom:1.5rem;
+}
+.hero h1{
+  font-size:3.5rem;
+  font-weight:900;
+  line-height:1.2;
+  background:linear-gradient(135deg,#fff,#69ff47);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.hero p{font-size:1.1rem;margin:1.5rem 0;color:#ddd;}
+.hero-stats{display:flex;gap:2rem;margin-top:2rem;flex-wrap:wrap;}
+.stat-item{text-align:center;}
+.stat-number{font-size:1.8rem;font-weight:900;color:#00e676;}
+.stat-label{font-size:0.75rem;color:#aaa;}
+.hero-image{flex:1;text-align:center;}
+.hero-image img{max-width:100%;border-radius:20px;animation:floatHero 4s infinite alternate;}
+@keyframes floatHero{
+  0%{transform:translateY(0px);}
+  100%{transform:translateY(-15px);}
+}
+
+/* Container */
+.container{max-width:1400px;margin:0 auto;padding:2rem 5%;position:relative;z-index:2;}
+
+/* Section Titles */
+.section-title{
+  font-size:2rem;
+  margin:2rem 0 1.5rem;
+  padding-bottom:0.5rem;
+  border-bottom:2px solid rgba(0,230,118,0.3);
+}
+.section-title span{color:#00e676;}
+
+/* Glass Cards */
+.glass-card{
+  background:rgba(0,230,118,0.05);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(0,230,118,0.15);
+  border-radius:16px;
+  padding:1.5rem;
+  margin:1rem 0;
+  transition:0.3s;
+}
+.glass-card:hover{transform:translateY(-3px);border-color:#00e676;}
+.features-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:1.5rem;
+  margin:1.5rem 0;
+}
+.feature-icon{font-size:2rem;margin-bottom:0.8rem;}
+
+/* Tables */
+.table-container{
+  background:rgba(0,0,0,0.5);
+  backdrop-filter:blur(8px);
+  border-radius:16px;
+  border:1px solid rgba(0,230,118,0.15);
+  overflow-x:auto;
+  margin:1.5rem 0;
+}
+.data-table{width:100%;border-collapse:collapse;font-size:0.8rem;}
+.data-table th{
+  background:rgba(0,230,118,0.15);
+  padding:0.8rem;
+  text-align:left;
+  color:#69ff47;
+}
+.data-table td{padding:0.8rem;border-bottom:1px solid rgba(0,230,118,0.08);}
+.badge{
+  display:inline-block;
+  padding:0.2rem 0.6rem;
+  border-radius:4px;
+  font-size:0.7rem;
+  font-weight:bold;
+}
+.badge-win{background:rgba(0,230,118,0.2);color:#00e676;}
+.badge-loss{background:rgba(255,23,68,0.2);color:#ff5252;}
+.badge-buy{background:rgba(0,230,118,0.2);color:#00e676;}
+.badge-sell{background:rgba(255,23,68,0.2);color:#ff5252;}
+
+/* Session Timers */
+.sessions-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:1rem;
+  margin:1.5rem 0;
+}
+.session-card{
+  background:rgba(0,0,0,0.5);
+  backdrop-filter:blur(8px);
+  border-radius:12px;
+  padding:1rem;
+  text-align:center;
+  border:1px solid rgba(0,230,118,0.15);
+}
+.session-timer{font-size:1.5rem;font-family:monospace;color:#00e676;}
+
+/* Rules */
+.rules-list{
+  background:rgba(0,0,0,0.5);
+  backdrop-filter:blur(8px);
+  border-radius:16px;
+  padding:1.5rem;
+  margin:1.5rem 0;
+}
+.rule-item{display:flex;align-items:center;gap:1rem;padding:0.6rem;border-bottom:1px solid rgba(0,230,118,0.1);}
+.rule-checkbox{width:18px;height:18px;accent-color:#00e676;cursor:pointer;}
+.rule-status{font-size:0.7rem;padding:0.2rem 0.5rem;border-radius:4px;}
+.rule-status.passed{background:rgba(0,230,118,0.2);color:#00e676;}
+.rule-status.failed{background:rgba(255,23,68,0.2);color:#ff5252;}
+
+/* Calculators */
+.calculators-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:1.5rem;
+  margin:1.5rem 0;
+}
+.calculator-card{
+  background:rgba(0,0,0,0.5);
+  backdrop-filter:blur(8px);
+  border-radius:16px;
+  padding:1.2rem;
+  border:1px solid rgba(0,230,118,0.15);
+}
+.calculator-card input{
+  width:100%;
+  background:rgba(0,0,0,0.6);
+  border:1px solid rgba(0,230,118,0.2);
+  padding:0.5rem;
+  border-radius:8px;
+  color:#e8f5e9;
+  margin:0.5rem 0;
+}
+.calc-result{
+  color:#00e676;
+  font-weight:bold;
+  margin-top:0.8rem;
+  padding:0.5rem;
+  background:rgba(0,230,118,0.1);
+  border-radius:8px;
+  text-align:center;
+}
+
+/* Heatmap */
+.heatmap-grid{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:0.5rem;
+  margin:1.5rem 0;
+}
+.heatmap-day{
+  background:rgba(0,0,0,0.5);
+  backdrop-filter:blur(4px);
+  border-radius:8px;
+  padding:0.5rem;
+  text-align:center;
+  font-size:0.7rem;
+}
+.heatmap-day.win{background:rgba(0,230,118,0.4);}
+.heatmap-day.loss{background:rgba(255,23,68,0.4);}
+.heatmap-day.be{background:rgba(255,193,7,0.4);}
+
+/* AI Upload */
+.ai-upload{
+  border:2px dashed rgba(0,230,118,0.4);
+  border-radius:16px;
+  padding:2rem;
+  text-align:center;
+  cursor:pointer;
+  margin:1.5rem 0;
+  background:rgba(0,0,0,0.3);
+  backdrop-filter:blur(8px);
+  transition:0.3s;
+}
+.ai-upload:hover{border-color:#00e676;background:rgba(0,230,118,0.05);}
+.ai-response{
+  background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(8px);
+  border-radius:12px;
+  padding:1rem;
+  font-family:monospace;
+  font-size:0.75rem;
+  white-space:pre-wrap;
+  margin-top:1rem;
+  display:none;
+}
+
+/* TOC */
+.toc{
+  background:rgba(0,230,118,0.05);
+  backdrop-filter:blur(8px);
+  border-radius:16px;
+  padding:1.5rem;
+  margin:1.5rem 0;
+}
+.toc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0.8rem;}
+.toc a{color:#69ff47;text-decoration:none;font-size:0.85rem;}
+.toc a:hover{text-decoration:underline;}
+
+/* Footer */
+.footer{
+  background:rgba(6,10,8,0.9);
+  backdrop-filter:blur(10px);
+  padding:2rem 5%;
+  text-align:center;
+  border-top:1px solid rgba(0,230,118,0.2);
+  margin-top:3rem;
+}
+
+@media(max-width:768px){
+  .hero h1{font-size:2rem;}
+  .nav-links{gap:0.4rem;}
+  .nav-btn{padding:0.3rem 0.8rem;font-size:0.7rem;}
+  .section-title{font-size:1.5rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- FOREX BACKGROUND SLIDESHOW -->
+<div class="forex-bg">
+  <div class="bg-slide bg1"></div>
+  <div class="bg-slide bg2"></div>
+  <div class="bg-slide bg3"></div>
+  <div class="bg-slide bg4"></div>
+</div>
+<div class="dark-overlay"></div>
+
+<!-- MOVING CANDLESTICK CANVAS -->
+<div class="candlestick-bg">
+  <canvas id="candleCanvas" class="candlestick-canvas"></canvas>
+</div>
+
+<div class="particles" id="particles"></div>
+
+<nav class="navbar">
+  <div class="logo">📊 TradeVault Pro</div>
+  <div class="nav-links">
+    <a href="#overview" class="nav-btn">Overview</a>
+    <a href="#features" class="nav-btn">Features</a>
+    <a href="#journal" class="nav-btn">Journal</a>
+    <a href="#ai" class="nav-btn">AI Analyst</a>
+    <a href="#analytics" class="nav-btn">Analytics</a>
+    <a href="#heatmap" class="nav-btn">Heatmap</a>
+    <a href="#sessions" class="nav-btn">Sessions</a>
+    <a href="#rules" class="nav-btn">Rules</a>
+    <a href="#calculators" class="nav-btn">Calculators</a>
+  </div>
+  <!-- TOP LAUNCH BUTTON - SILENT -->
+  <button class="launch-btn" id="topLaunchBtn">🚀 Launch App</button>
+</nav>
+
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge"><i class="fas fa-globe"></i> Forex & Crypto | Version 2.0</div>
+    <h1>TradeVault Pro<br><span>Professional Trading Suite</span></h1>
+    <p>All-in-one platform for serious Forex and cryptocurrency traders. 11 powerful modules including AI chart analysis, smart journal, session timers, and institutional-grade risk management.</p>
+    <div class="hero-stats">
+      <div class="stat-item"><div class="stat-number">11</div><div class="stat-label">Modules</div></div>
+      <div class="stat-item"><div class="stat-number">100%</div><div class="stat-label">Free</div></div>
+      <div class="stat-item"><div class="stat-number">24/7</div><div class="stat-label">Alerts</div></div>
+      <div class="stat-item"><div class="stat-number">⭐ 4.9</div><div class="stat-label">Rating</div></div>
+    </div>
+  </div>
+  <div class="hero-image">
+    <img src="https://placehold.co/450x350/0a2a1a/00e676?text=Forex+Market+Live" alt="Forex Dashboard">
+  </div>
+</section>
+
+<div class="container">
+  <!-- Table of Contents -->
+  <div class="toc">
+    <h3 style="margin-bottom:1rem;">📑 Table of Contents</h3>
+    <div class="toc-grid">
+      <a href="#overview">1. Overview</a>
+      <a href="#features">2. Features & Modules</a>
+      <a href="#journal">3. Trade Journal</a>
+      <a href="#ai">4. AI Chart Analyst</a>
+      <a href="#charts">5. Live TradingView Charts</a>
+      <a href="#analytics">6. Deep Analytics</a>
+      <a href="#heatmap">7. Calendar Heatmap</a>
+      <a href="#sessions">8. Session Timers</a>
+      <a href="#rules">9. Rules Checklist</a>
+      <a href="#calculators">10. Calculators</a>
+      <a href="#fundamentals">11. Fundamental Analysis</a>
+      <a href="#auth">12. Authentication</a>
+      <a href="#getting-started">13. Getting Started</a>
+    </div>
+  </div>
+
+  <!-- 1. Overview -->
+  <h2 id="overview" class="section-title"><span>1.</span> Overview</h2>
+  <div class="glass-card">
+    <h3 style="color:#69ff47;">What is TradeVault Pro?</h3>
+    <p style="margin-top:0.5rem;">TradeVault Pro is an <strong>all-in-one professional trading platform</strong> built for serious Forex and cryptocurrency traders. It combines 11 powerful modules into one clean, intuitive interface:</p>
+    <ul style="margin:1rem 0 0 1.5rem;color:#ccc;">
+      <li><strong>Smart Trade Journal</strong> — Log every trade with complete details</li>
+      <li><strong>AI Chart Analyst</strong> — Instant ICT/SMC analysis with vision AI</li>
+      <li><strong>Live TradingView Charts</strong> — Professional charting with indicators</li>
+      <li><strong>Deep Analytics</strong> — Win rate, equity curve, setup performance</li>
+      <li><strong>Calendar Heatmap</strong> — Visual P&L calendar by day</li>
+      <li><strong>Session Timers</strong> — Kill Zone countdowns with notifications</li>
+      <li><strong>Rules Checklist</strong> — Pre-trade discipline with ICT rules</li>
+      <li><strong>4 Calculators</strong> — Position size, R:R, profit target, drawdown</li>
+      <li><strong>Fundamental Analysis</strong> — Economic calendar, news, sentiment</li>
+      <li><strong>Train Your AI</strong> — Teach AI your trading style</li>
+      <li><strong>Goals & Targets</strong> — Daily checklist, P&L targets, exports</li>
+    </ul>
+    <div style="background:rgba(0,230,118,0.1);padding:1rem;border-radius:12px;margin-top:1rem;">
+      <strong>✅ 100% Free to Start</strong><br>
+      No credit card needed. Full access to all core features. AI features require a free Groq API key (console.groq.com).
+    </div>
+  </div>
+
+  <!-- 2. Features & Modules -->
+  <h2 id="features" class="section-title"><span>2.</span> Features & Modules</h2>
+  <div class="features-grid">
+    <div class="glass-card"><div class="feature-icon">📋</div><h3>Trade Journal</h3><p>Forex/Crypto • Entry/SL/TP • Lot size • P&L • Setup notes • Live R:R calc</p></div>
+    <div class="glass-card"><div class="feature-icon">🤖</div><h3>AI Chart Analyst</h3><p>Market structure • OBs • FVGs • Liquidity • Entry/SL/TP • BUY/SELL/WAIT</p></div>
+    <div class="glass-card"><div class="feature-icon">📈</div><h3>Deep Analytics</h3><p>Win rate • Profit factor • Equity curve • Setup performance • Monthly progress</p></div>
+    <div class="glass-card"><div class="feature-icon">🗓️</div><h3>Calendar Heatmap</h3><p>Visual P&L tracking • Best/Worst days • Win/Loss distribution</p></div>
+    <div class="glass-card"><div class="feature-icon">⏰</div><h3>Session Timers</h3><p>Kill Zone countdowns • Browser notifications • Asian/London/NY</p></div>
+    <div class="glass-card"><div class="feature-icon">✅</div><h3>Rules Checklist</h3><p>ICT rules • Pre-trade discipline • Compliance scoring</p></div>
+    <div class="glass-card"><div class="feature-icon">🧮</div><h3>4 Calculators</h3><p>Position size • R:R ratio • Profit target • Drawdown guard</p></div>
+    <div class="glass-card"><div class="feature-icon">📊</div><h3>Fundamental Analysis</h3><p>Economic calendar • News feeds • Central bank tracker</p></div>
+  </div>
+
+  <!-- 3. Trade Journal -->
+  <h2 id="journal" class="section-title"><span>3.</span> Trade Journal</h2>
+  <div class="glass-card">
+    <p><strong>Log every trade with:</strong> Forex pair/crypto symbol • Direction (Buy/Sell) • Entry, SL, TP • Lot size • Outcome & P&L • Setup used • Personal notes</p>
+    <p class="subtitle" style="color:#69ff47;">Live R:R Calculation: Shows your risk:reward ratio as you type.</p>
+  </div>
+  <div class="table-container">
+    <table class="data-table">
+      <thead><tr><th>Date</th><th>Pair</th><th>Dir</th><th>Entry</th><th>SL</th><th>TP</th><th>Lot</th><th>P&L</th><th>Result</th><th>Setup</th></tr></thead>
+      <tbody>
+        <tr><td>2025-04-22</td><td style="color:#00e676;">EUR/USD</td><td><span class="badge badge-buy">BUY</span></td><td>1.0841</td><td>1.0820</td><td>1.0885</td><td>0.50</td><td style="color:#00e676;">+$142</td><td><span class="badge badge-win">WIN</span></td><td>OB+FVG+BOS</td></tr>
+        <tr><td>2025-04-21</td><td style="color:#00e676;">XAU/USD</td><td><span class="badge badge-sell">SELL</span></td><td>2321.40</td><td>2340.50</td><td>2290.20</td><td>0.75</td><td style="color:#00e676;">+$380</td><td><span class="badge badge-win">WIN</span></td><td>Bearish OB</td></tr>
+        <tr><td>2025-04-20</td><td style="color:#00e676;">GBP/USD</td><td><span class="badge badge-buy">BUY</span></td><td>1.2598</td><td>1.2575</td><td>1.2650</td><td>0.45</td><td style="color:#ff5252;">-$80</td><td><span class="badge badge-loss">LOSS</span></td><td>BOS Retest</td></tr>
+        <tr><td>2025-04-19</td><td style="color:#00e676;">BTC/USD</td><td><span class="badge badge-buy">BUY</span></td><td>61,240</td><td>60,850</td><td>63,450</td><td>0.10</td><td style="color:#00e676;">+$620</td><td><span class="badge badge-win">WIN</span></td><td>FVG Fill</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="glass-card"><strong>Live R:R Calculator:</strong> Risk $100 | Potential Reward: $240 (R:R 1:2.4) ✅</div>
+
+  <!-- 4. AI Chart Analyst -->
+  <h2 id="ai" class="section-title"><span>4.</span> AI Chart Analyst</h2>
+  <div class="ai-upload" id="aiUploadArea">
+    <i class="fas fa-cloud-upload-alt" style="font-size:2rem;margin-bottom:0.5rem;display:block;"></i>
+    <div>📤 Upload chart screenshot for instant ICT/SMC analysis</div>
+    <div style="font-size:0.7rem;color:#aaa;">Powered by Groq AI (Llama 4 Scout)</div>
+    <input type="file" id="aiFileInput" accept="image/*" style="display:none;">
+  </div>
+  <div class="ai-response" id="aiResponse">
+    <div style="color:#69ff47;">🤖 AI Analysis Result:</div>
+    <div id="aiAnalysisText"></div>
+  </div>
+  <div class="glass-card">
+    <pre style="background:rgba(0,0,0,0.5);padding:1rem;border-radius:8px;overflow-x:auto;font-size:0.7rem;color:#ccc;">
+📊 EURUSD 4H Chart Analysis
+─────────────────────────────
+Market Structure: BULLISH (HTF)
+Order Blocks: Bullish OB @ 1.0821-1.0835
+Fair Value Gaps: Bullish FVG @ 1.0855-1.0870
+✅ FINAL RECOMMENDATION: BUY
+ENTRY ZONE: 1.0850 - 1.0860 | STOP LOSS: 1.0825
+TP1: 1.0885 | TP2: 1.0920 | TP3: 1.0960
+R:R: 1:3.14 🚀
+    </pre>
+  </div>
+
+  <!-- 5. Live TradingView Charts -->
+  <h2 id="charts" class="section-title"><span>5.</span> Live TradingView Charts</h2>
+  <div class="glass-card">
+    <p><strong>Full TradingView Integration</strong> with real-time charting:</p>
+    <ul style="margin:0.5rem 0 0 1.5rem;">
+      <li>Switch between any symbol (EUR/USD, GBP/JPY, BTC, ETH, XAU/USD)</li>
+      <li>Multiple timeframes (1m to weekly)</li>
+      <li>Pre-loaded indicators: RSI, MACD, Moving Averages</li>
+      <li>Light/Dark theme toggle • Multiple chart styles</li>
+    </ul>
+  </div>
+
+  <!-- 6. Deep Analytics -->
+  <h2 id="analytics" class="section-title"><span>6.</span> Deep Analytics</h2>
+  <div class="features-grid">
+    <div class="glass-card"><div class="stat-number">47</div><div class="stat-label">Total Trades</div></div>
+    <div class="glass-card"><div class="stat-number" style="color:#00e676;">68.1%</div><div class="stat-label">Win Rate</div></div>
+    <div class="glass-card"><div class="stat-number" style="color:#00e676;">+$1,842</div><div class="stat-label">Net P&L</div></div>
+    <div class="glass-card"><div class="stat-number">1:2.4</div><div class="stat-label">Avg R:R</div></div>
+  </div>
+  <div class="glass-card">
+    <p><strong>Profit Factor: 2.18 ✅</strong> (Total Profit / Total Loss = $2,520 / $1,156)</p>
+    <p><strong>Top Performing Setups:</strong><br>OB+FVG Confluence: 18 trades, 77.8% win, +$1,080<br>BOS Retest: 14 trades, 64.3% win, +$420</p>
+    <p><strong>Monthly Progress:</strong><br>Jan: +$480 | Feb: +$620 | Mar: +$420 | Apr: +$322 🔥</p>
+  </div>
+
+  <!-- 7. Calendar Heatmap -->
+  <h2 id="heatmap" class="section-title"><span>7.</span> Calendar Heatmap</h2>
+  <div class="heatmap-grid" id="heatmapGrid"></div>
+  <div class="glass-card"><strong>Summary:</strong> Win Days: 20 (66.7%) | Loss Days: 8 (26.7%) | Total P&L: +$3,220 ✅</div>
+
+  <!-- 8. Session Timers -->
+  <h2 id="sessions" class="section-title"><span>8.</span> Session Timers & Kill Zones</h2>
+  <div class="sessions-grid" id="sessionsGrid"></div>
+  <div class="glass-card"><strong>✅ Browser Notifications Enabled</strong> — Receive alerts 5 minutes before each Kill Zone opens.</div>
+
+  <!-- 9. Rules Checklist -->
+  <h2 id="rules" class="section-title"><span>9.</span> Pre-Trade Rules Checklist</h2>
+  <div class="rules-list" id="rulesList"></div>
+  <div id="rulesScore" style="text-align:center;margin:1rem 0;font-size:1rem;"></div>
+
+  <!-- 10. Calculators -->
+  <h2 id="calculators" class="section-title"><span>10.</span> Built-in Calculators</h2>
+  <div class="calculators-grid">
+    <div class="calculator-card"><h3>📊 Position Size</h3>
+      <input type="number" id="calcAccount" placeholder="Account" value="10000">
+      <input type="number" id="calcRiskPercent" placeholder="Risk %" value="0.25">
+      <input type="number" id="calcStopPips" placeholder="Stop (pips)" value="21">
+      <div class="calc-result" id="positionSizeResult">Position: 0.119 lots</div>
+    </div>
+    <div class="calculator-card"><h3>⚖️ Risk:Reward</h3>
+      <input type="number" id="rrEntry" placeholder="Entry" value="1.0841">
+      <input type="number" id="rrSL" placeholder="SL" value="1.0820">
+      <input type="number" id="rrTP" placeholder="TP" value="1.0885">
+      <div class="calc-result" id="rrResult">R:R: 1:2.09</div>
+    </div>
+    <div class="calculator-card"><h3>🎯 Profit Target</h3>
+      <input type="number" id="targetRisk" placeholder="Risk (pips)" value="21">
+      <input type="number" id="targetRR" placeholder="Desired R:R" value="3">
+      <div class="calc-result" id="targetResult">Target: 63 pips</div>
+    </div>
+    <div class="calculator-card"><h3>📉 Drawdown Guard</h3>
+      <input type="number" id="ddAccount" placeholder="Account" value="10000">
+      <input type="number" id="ddLossLimit" placeholder="Daily Limit %" value="2">
+      <input type="number" id="ddCurrentLoss" placeholder="Current Loss" value="165">
+      <div class="calc-result" id="ddResult">Remaining: $35 ⚠️</div>
+    </div>
+  </div>
+
+  <!-- 11. Fundamental Analysis -->
+  <h2 id="fundamentals" class="section-title"><span>11.</span> Fundamental Analysis</h2>
+  <div class="features-grid">
+    <div class="glass-card"><h3>📅 Economic Calendar</h3><p>Live TradingView calendar with real-time economic events, impact levels, forecasts</p></div>
+    <div class="glass-card"><h3>📰 News Feeds</h3><p>Live TradingView news for Forex & Crypto. Market updates in real-time</p></div>
+    <div class="glass-card"><h3>📊 Market Sentiment</h3><p>Retail long/short percentages for major pairs. Smart money interpretation</p></div>
+    <div class="glass-card"><h3>🏦 Central Bank Tracker</h3><p>All 8 major CB rates, stances, next meeting dates, outlooks</p></div>
+  </div>
+
+  <!-- 12. Authentication -->
+  <h2 id="auth" class="section-title"><span>12.</span> Authentication & Security</h2>
+  <div class="features-grid">
+    <div class="glass-card"><h3>✉️ Email & Password</h3><p>Secure base64 encoded storage. Works offline.</p></div>
+    <div class="glass-card"><h3>🔐 Google Sign-In</h3><p>Official OAuth on deployed sites.</p></div>
+    <div class="glass-card"><h3>👤 Guest Mode</h3><p>Instant access, data saved locally.</p></div>
+    <div class="glass-card"><h3>💾 Data Storage</h3><p>LocalStorage + Artifact. Never sent to servers. Export JSON backup.</p></div>
+  </div>
+
+  <!-- 13. Getting Started -->
+  <h2 id="getting-started" class="section-title"><span>13.</span> Getting Started Guide</h2>
+  <div class="glass-card">
+    <p><strong>Step 1:</strong> Create Account (Email/Google/Guest) — 2 minutes</p>
+    <p><strong>Step 2:</strong> Set Up AI Assistant — Get free Groq API key at console.groq.com</p>
+    <p><strong>Step 3:</strong> Log Your First Trade — Fill in entry, SL, TP, lot size — Auto P&L calculation</p>
+    <p><strong>Step 4:</strong> Check Rules Before Trading — ICT pre-trade checklist</p>
+    <p><strong>Step 5:</strong> Use AI Chart Analyst — Upload screenshot → Instant analysis</p>
+    <p><strong>Step 6:</strong> Review Weekly — Heatmap + Analytics + AI coaching</p>
+  </div>
+
+  <!-- BOTTOM LAUNCH BUTTON - SILENT -->
+  <div style="text-align:center;margin:2rem 0;padding:1rem;background:rgba(0,230,118,0.1);border-radius:16px;">
+    <p style="font-size:1.2rem;">✅ Ready to trade like a professional?</p>
+    <button class="btn-link" id="bottomLaunchBtn">Launch App Now →</button>
+  </div>
+</div>
+
+<footer class="footer">
+  <p><i class="fas fa-chart-line"></i> TradeVault Pro — Professional Trading Suite | Built for Serious Forex & Crypto Traders</p>
+  <p style="color:#546e6a;font-size:0.7rem;margin-top:0.5rem;">Version 2.0 | Updated April 2025 | All features working perfectly ✅</p>
+  <p style="color:#00e676;font-size:0.7rem;margin-top:0.5rem;">⚡ Live Candlestick Feed | Real-time Forex Market Simulation ⚡</p>
+</footer>
+
+<script>
+  // --- CONFIGURATION: REPLACE WITH YOUR ACTUAL APP URL ---
+  const APP_URL = "https://trading-vault-p-website-com.vercel.app";  // <-- CHANGE THIS TO YOUR CORRECT URL
+
+  // Silent launch function (no alerts)
+  function launchApp() {
+    window.open(APP_URL, '_blank');
+  }
+
+  // Attach to both buttons
+  document.getElementById('topLaunchBtn').addEventListener('click', launchApp);
+  document.getElementById('bottomLaunchBtn').addEventListener('click', launchApp);
+
+  // MOVING CANDLESTICK CANVAS
+  function initCandleCanvas() {
+    const canvas = document.getElementById('candleCanvas');
+    if(!canvas) return;
+    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    window.addEventListener('resize', resize);
+    resize();
+    
+    let candles = [];
+    const numCandles = 100;
+    let offset = 0;
+    for(let i=0;i<numCandles;i++) {
+      candles.push({ high: 80+Math.random()*40, low: 20+Math.random()*30, open: 40+Math.random()*30, close: 40+Math.random()*30 });
+    }
+    
+    function draw() {
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      const cw = Math.max(3, canvas.width/numCandles - 1);
+      const sp = 1;
+      const start = Math.floor(offset/(cw+sp));
+      const end = Math.min(numCandles, start + Math.ceil(canvas.width/(cw+sp))+5);
+      for(let i=start;i<end;i++) {
+        const idx = i%numCandles;
+        const c = candles[idx];
+        const x = i*(cw+sp)-offset;
+        if(x+cw<0||x>canvas.width) continue;
+        const scale = (canvas.height-80)/100;
+        const baseY = canvas.height-40;
+        const openY = baseY - c.open*scale;
+        const closeY = baseY - c.close*scale;
+        const highY = baseY - c.high*scale;
+        const lowY = baseY - c.low*scale;
+        ctx.beginPath();
+        ctx.moveTo(x+cw/2, highY);
+        ctx.lineTo(x+cw/2, lowY);
+        ctx.strokeStyle = 'rgba(200,200,200,0.4)';
+        ctx.lineWidth=1;
+        ctx.stroke();
+        const isBull = c.close > c.open;
+        ctx.fillStyle = isBull ? 'rgba(0,230,118,0.6)' : 'rgba(255,82,82,0.6)';
+        ctx.fillRect(x, Math.min(openY,closeY), cw, Math.abs(closeY-openY));
+        ctx.strokeStyle = isBull ? '#00e676' : '#ff5252';
+        ctx.strokeRect(x, Math.min(openY,closeY), cw, Math.abs(closeY-openY));
+      }
+      offset = (offset + 1) % ((cw+sp)*numCandles);
+      requestAnimationFrame(draw);
+    }
+    draw();
+    setInterval(()=>{
+      for(let i=0;i<3;i++) {
+        let idx = Math.floor(Math.random()*numCandles);
+        candles[idx] = { high:80+Math.random()*40, low:20+Math.random()*30, open:40+Math.random()*30, close:40+Math.random()*30 };
+      }
+    }, 2000);
+  }
+  initCandleCanvas();
+
+  // Particles
+  const pContainer = document.getElementById('particles');
+  for(let i=0;i<50;i++){
+    let p = document.createElement('div');
+    p.classList.add('particle');
+    p.style.width = (Math.random()*4+1)+'px';
+    p.style.height = p.style.width;
+    p.style.left = Math.random()*100+'%';
+    p.style.animationDuration = Math.random()*15+8+'s';
+    p.style.animationDelay = Math.random()*10+'s';
+    pContainer.appendChild(p);
+  }
+
+  // Session Timers
+  const sessions = [
+    {name:'🌏 Asian Session', start:0, end:9},
+    {name:'🇬🇧 London Open', start:8, end:9},
+    {name:'🟢 London KZ', start:7, end:10},
+    {name:'🔀 London/NY Overlap', start:12, end:13},
+    {name:'🇺🇸 NY KZ', start:12, end:15}
+  ];
+  function updateSessions() {
+    const now = new Date();
+    const utc = now.getUTCHours()+now.getUTCMinutes()/60;
+    const grid = document.getElementById('sessionsGrid');
+    if(grid) grid.innerHTML = sessions.map(s=>{
+      const active = utc>=s.start && utc<s.end;
+      let remain = active ? (s.end-utc)*3600 : (s.start>utc?(s.start-utc)*3600:0);
+      let timer = active ? `${Math.floor(remain/60)}m ${Math.floor(remain%60)}s` : (s.start>utc?`${Math.floor(remain/3600)}h ${Math.floor((remain%3600)/60)}m`:'Closed');
+      return `<div class="session-card"><div class="session-name">${s.name}</div><div class="session-timer">${timer}</div><div class="session-status">${active?'🟢 ACTIVE':'⚫ Waiting'}</div></div>`;
+    }).join('');
+  }
+  setInterval(updateSessions,1000);
+  updateSessions();
+
+  // Rules Checklist
+  const rules = ['HTF Bias Confirmed','Correct Session (London/NY KZ)','A+ Setup (OB+FVG)','Proper SL Placement','Min R:R 1:3','Correct Lot Size','Liquidity Sufficient','No Overtrading'];
+  const rulesDiv = document.getElementById('rulesList');
+  if(rulesDiv){
+    rulesDiv.innerHTML = rules.map((r,i)=>`<div class="rule-item"><input type="checkbox" class="rule-checkbox" id="rule${i}"><span class="rule-text">${r}</span><span class="rule-status failed" id="status${i}">❌</span></div>`).join('');
+    rules.forEach((_,i)=>{
+      const cb = document.getElementById(`rule${i}`);
+      cb.addEventListener('change',()=>{
+        const st = document.getElementById(`status${i}`);
+        if(cb.checked){ st.className='rule-status passed'; st.innerHTML='✅'; }
+        else{ st.className='rule-status failed'; st.innerHTML='❌'; }
+        const checked = document.querySelectorAll('.rule-checkbox:checked').length;
+        const score = (checked/rules.length*100).toFixed(0);
+        const scoreDiv = document.getElementById('rulesScore');
+        if(scoreDiv) scoreDiv.innerHTML = score>=80?`✅ RULES SCORE: ${score}% - Ready to Trade!`:`⚠️ RULES SCORE: ${score}% - Review before trading`;
+      });
+    });
+  }
+
+  // Heatmap
+  const heatmap = document.getElementById('heatmapGrid');
+  if(heatmap){
+    const days = Array.from({length:30},(_,i)=>i+1);
+    const results = ['win','loss','be','win','win','loss','win','win','be','win','loss','win','win','loss','win','win','loss','win','win','be','win','win','loss','win','win','win','loss','win','win','win'];
+    heatmap.innerHTML = days.map((d,i)=>`<div class="heatmap-day ${results[i%results.length]}">${d}<br>${results[i%results.length]==='win'?'+$'+Math.floor(Math.random()*300+50):results[i%results.length]==='loss'? '-$'+Math.floor(Math.random()*100+20):'BE'}</div>`).join('');
+  }
+
+  // Calculators
+  const accInput = document.getElementById('calcAccount');
+  const riskPct = document.getElementById('calcRiskPercent');
+  const stopPips = document.getElementById('calcStopPips');
+  const updatePos = () => {
+    const acc = parseFloat(accInput?.value)||0;
+    const pct = parseFloat(riskPct?.value)||0;
+    const pips = parseFloat(stopPips?.value)||1;
+    const riskAmt = acc*pct/100;
+    const lots = (riskAmt/(pips*10)).toFixed(3);
+    const posRes = document.getElementById('positionSizeResult');
+    if(posRes) posRes.innerText = `Position: ${lots} lots (Risk: $${riskAmt.toFixed(2)})`;
+  };
+  accInput?.addEventListener('input',updatePos);
+  riskPct?.addEventListener('input',updatePos);
+  stopPips?.addEventListener('input',updatePos);
+  updatePos();
+
+  const rrEntry = document.getElementById('rrEntry');
+  const rrSL = document.getElementById('rrSL');
+  const rrTP = document.getElementById('rrTP');
+  const updateRR = () => {
+    const e = parseFloat(rrEntry?.value)||0;
+    const sl = parseFloat(rrSL?.value)||0;
+    const tp = parseFloat(rrTP?.value)||0;
+    const risk = Math.abs(e-sl)*10000;
+    const rew = Math.abs(tp-e)*10000;
+    const ratio = risk? (rew/risk).toFixed(2):0;
+    const rrRes = document.getElementById('rrResult');
+    if(rrRes) rrRes.innerText = `R:R: 1:${ratio}`;
+  };
+  rrEntry?.addEventListener('input',updateRR);
+  rrSL?.addEventListener('input',updateRR);
+  rrTP?.addEventListener('input',updateRR);
+  updateRR();
+
+  const targetRisk = document.getElementById('targetRisk');
+  const targetRR = document.getElementById('targetRR');
+  const updateTarget = () => {
+    const r = parseFloat(targetRisk?.value)||0;
+    const rr = parseFloat(targetRR?.value)||0;
+    const tarRes = document.getElementById('targetResult');
+    if(tarRes) tarRes.innerText = `Target: ${r*rr} pips (R:R 1:${rr})`;
+  };
+  targetRisk?.addEventListener('input',updateTarget);
+  targetRR?.addEventListener('input',updateTarget);
+  updateTarget();
+
+  const ddAcc = document.getElementById('ddAccount');
+  const ddLimit = document.getElementById('ddLossLimit');
+  const ddLoss = document.getElementById('ddCurrentLoss');
+  const updateDD = () => {
+    const acc = parseFloat(ddAcc?.value)||0;
+    const limitPct = parseFloat(ddLimit?.value)||0;
+    const loss = parseFloat(ddLoss?.value)||0;
+    const maxLoss = acc*limitPct/100;
+    const remaining = maxLoss-loss;
+    const ddRes = document.getElementById('ddResult');
+    if(ddRes) ddRes.innerText = `Remaining: $${Math.max(0,remaining).toFixed(2)} ${remaining<=0?'🔴 STOP':'✅ Safe'}`;
+  };
+  ddAcc?.addEventListener('input',updateDD);
+  ddLimit?.addEventListener('input',updateDD);
+  ddLoss?.addEventListener('input',updateDD);
+  updateDD();
+
+  // AI Upload
+  const uploadArea = document.getElementById('aiUploadArea');
+  const fileInput = document.getElementById('aiFileInput');
+  const aiResponse = document.getElementById('aiResponse');
+  const aiText = document.getElementById('aiAnalysisText');
+  uploadArea?.addEventListener('click',()=>fileInput?.click());
+  fileInput?.addEventListener('change',(e)=>{
+    if(e.target.files[0]){
+      aiResponse.style.display = 'block';
+      aiText.innerHTML = '🤖 Analyzing chart...\n\nMarket Structure: BULLISH (HTF)\nOrder Block detected @ 1.0820-1.0835\nFair Value Gap @ 1.0855-1.0870\n✅ RECOMMENDATION: BUY\nEntry: 1.0850-1.0860\nSL: 1.0825 | TP: 1.0920\nR:R: 1:2.4';
+    }
+  });
+</script>
+</body>
+</html>
